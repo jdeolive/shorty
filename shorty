@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+  echo "Usage: $0 <url>" 
+  exit
+fi
+
+if [ -z $SHORTY_APY_KEY ]; then
+  echo "Environment variable named 'SHORTY_APY_KEY' must be set"
+  exit
+fi
+
+api_key=$SHORTY_APY_KEY
+api_url="https://www.googleapis.com/urlshortener/v1/url?key=$api_key"
+curl -s -XPOST "$api_url" -H "Content-Type: application/json" -d "{\"longUrl\": \"$1\"}" | grep "\"id\":" | sed 's/.*"id": "\(.*\)",/\1/g'
